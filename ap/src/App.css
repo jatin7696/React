@@ -1,0 +1,65 @@
+.Nav-ul li {
+  display: inline-block;
+  padding: 10px;
+}
+
+.Nav-ul li a {
+  padding: 5px;
+  color: #fff;
+  text-decoration: none;
+}
+.Nav-ul {
+  padding: 0;
+  margin: 0;
+  background-color: skyblue;
+}
+
+.Footer {
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  background-color: skyblue;
+  width: 100%;
+}
+.register {
+  margin-left: 30%;
+}
+.input-box {
+  display: block;
+  margin: 25px;
+  padding: 7px;
+  width: 300px;
+  border: 1px solid skyblue;
+}
+
+.appButton {
+  margin: 25px;
+  width: 100px;
+  padding: 10px;
+  background-color: skyblue;
+  border: 1px solid;
+  cursor: pointer;
+}
+header {
+  padding: 1rem 0;
+}
+
+.main-content {
+  margin-top: 2rem;
+}
+
+.product {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 1rem 0;
+  margin: 1rem 0;
+}
+
+.product-detail {
+  padding: 0 2rem;
+}
+
+.product-price {
+  font-weight: bold;
+  font-size: 140%;
+}
