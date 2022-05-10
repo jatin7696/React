@@ -93,11 +93,33 @@ app.post("/add-product", async (req, resp) => {
 });
 
 app.get("/products", async (req, resp) => {
-  const products = await Product.find();
-  if (products.length > 0) {
-    resp.send(products);
-  } else {
-    resp.send({ result: "No Product found" });
+  try {
+    const page = parseInt(req.query.page) || "0";
+    console.log("this is page === ", page);
+    const pageSize = 4;
+    const total = await Product.countDocuments({});
+    // const { l } = req.query;
+    // console.log(page);
+    const products = await Product.find()
+      .limit(pageSize)
+      .skip(pageSize * page);
+    resp.json({
+      total,
+      totalPages: Math.ceil(total / pageSize),
+      products,
+    });
+
+    if (products.length > 0) {
+      resp.send(products);
+      // resp.status(400).json({
+      //   products,
+      //   success: true,
+      // });
+    } else {
+      resp.send({ result: "No Product found" });
+    }
+  } catch (err) {
+    console.log("hard error", err);
   }
 });
 
