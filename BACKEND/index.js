@@ -5,13 +5,19 @@ const User = require("./db/user");
 const Product = require("./db/Product");
 const Contact = require("./db/Contact");
 const Jwt = require("jsonwebtoken");
-const jwtKey = "e-com";
+const Cart = require("./db/cart");
+// const jwtKey = "ecom";
 const app = express();
 const bcrypt = require("bcrypt");
 //app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+const { jwtKey } = require("./config");
+const cart = require("./db/cart");
 const PORT = 8080;
+// const dotenv = require("dotenv");
+// dotenv.config();
+// console.log("this is env key ============ ", jwtKey);
 
 app.get("/search/:key", async (req, resp) => {
   let result = await Product.find({
@@ -56,7 +62,7 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, resp) => {
   if (req.body.password && req.body.username) {
-    //  console.log("under if 1");
+    // console.log("under if 1");
     let user = await User.findOne(req.body).select("-password");
     console.log("this is login user", user);
     if (user) {
@@ -96,7 +102,7 @@ app.get("/products", async (req, resp) => {
   try {
     const page = parseInt(req.query.page) || "0";
     console.log("this is page === ", page);
-    const pageSize = 4;
+    const pageSize = 3;
     const total = await Product.countDocuments({});
     // const { l } = req.query;
     // console.log(page);
@@ -110,7 +116,7 @@ app.get("/products", async (req, resp) => {
     });
 
     if (products.length > 0) {
-      resp.send(products);
+      resp.send("test");
       // resp.status(400).json({
       //   products,
       //   success: true,
@@ -154,6 +160,31 @@ app.post("/Contact", async (req, res) => {
   res.send(result);
 });
 
+app.post("/addToCart", async (req, res) => {
+  // console.log("this is node add to cart == > ", req.body);
+  if (req.body != null) {
+    console.log("this is node add to cart == > ", req.body);
+    let data = req.body;
+    //const userId = JSON.parse(localStorage.getItem("user"))._id;
+    //  console.log("this is user id ==> ", userId);
+    //for (var i = 0; i <= data.length; i++) {
+    // if (data[i].userId != null) {
+    // console.log("this is from object userid ==== > ", data[i].userId);
+    const cartData = await Cart(req.body);
+  //  console.log("this is cart data ====== ", cartData);
+    const result = await cartData.save();
+    console.log("this is cart result ====== ", result);
+    res.send(result);
+    //}
+    // }
+    // let user = await User.findById(req.body.userId);
+    // console.log("this is matched userid == ", user);
+  }
+
+  // var cartProduct = [req.body];``
+  //cartProduct = req.body._id;
+  //console.log("cartProduct === >  ", cartProduct);
+});
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+  console.log(`Server is running on port ${PORT}`);
 });
