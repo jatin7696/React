@@ -171,7 +171,7 @@ app.post("/addToCart", async (req, res) => {
     // if (data[i].userId != null) {
     // console.log("this is from object userid ==== > ", data[i].userId);
     const cartData = await Cart(req.body);
-  //  console.log("this is cart data ====== ", cartData);
+    console.log("this is cart data ====== ", cartData);
     const result = await cartData.save();
     console.log("this is cart result ====== ", result);
     res.send(result);
