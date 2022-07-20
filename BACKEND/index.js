@@ -6,6 +6,7 @@ const Product = require("./db/Product");
 const Contact = require("./db/Contact");
 const Jwt = require("jsonwebtoken");
 const Cart = require("./db/cart");
+const Razorpay = require("razorpay");
 // const jwtKey = "ecom";
 const app = express();
 const bcrypt = require("bcrypt");
@@ -13,11 +14,64 @@ const bcrypt = require("bcrypt");
 app.use(express.json());
 app.use(cors());
 const { jwtKey } = require("./config");
+const Order = require("./db/order");
 const cart = require("./db/cart");
 const PORT = 8080;
 // const dotenv = require("dotenv");
 // dotenv.config();
 // console.log("this is env key ============ ", jwtKey);
+
+app.post("/create-order", async (req, res) => {
+  console.log("this is requestfororder  ", req.body);
+  try {
+    var instance = new Razorpay({
+      key_id: "rzp_test_AHarLPM8Zl6Anf",
+      key_secret: "9xy3JaI5dIlqKu2OijDjtscv",
+    });
+
+    let options = {
+      amount: req.body.amount, // amount in the smallest currency unit
+      currency: "INR",
+    };
+    const order = await instance.orders.create(options, function (err, order) {
+      console.log("orders === ", order);
+      if (order == null) {
+        console.log("underidconditoion", order);
+        return res.status(500).send("some error occured");
+      }
+      res.send(order);
+    });
+  } catch (error) {
+    console.log(error, "error aa gaya");
+  }
+});
+
+app.get("/get-razorpay-key", (req, res) => {
+  res.send({ key: "rzp_test_AHarLPM8Zl6Anf" });
+});
+
+app.post("/pay-order", async (req, res) => {
+  try {
+    const { amount, razorpayPaymentId, razorpayOrderId, razorpaySignature } =
+      req.body;
+    const newOrder = Order({
+      isPaid: true,
+      amount: amount,
+      razorpay: {
+        orderId: razorpayOrderId,
+        paymentId: razorpayPaymentId,
+        signature: razorpaySignature,
+      },
+    });
+    await newOrder.save();
+    res.send({
+      msg: "Payment was successfull",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
 
 app.get("/search/:key", async (req, resp) => {
   let result = await Product.find({

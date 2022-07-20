@@ -31,7 +31,7 @@ const SignUp = () => {
       console.log(
         "this is local  === ",
         localStorage.setItem("user", JSON.stringify(result))
-      );
+      );  
 
       //navigate("/");
     }
