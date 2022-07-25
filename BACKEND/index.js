@@ -25,8 +25,8 @@ app.post("/create-order", async (req, res) => {
   console.log("this is requestfororder  ", req.body);
   try {
     var instance = new Razorpay({
-      key_id: "rzp_test_AHarLPM8Zl6Anf",
-      key_secret: "9xy3JaI5dIlqKu2OijDjtscv",
+      key_id: process.env.Razorpay_Key,
+      key_secret: process.env.Razorpay_secret,
     });
 
     let options = {
@@ -74,6 +74,7 @@ app.post("/pay-order", async (req, res) => {
 });
 
 app.get("/search/:key", async (req, resp) => {
+  // console.log("thisissearchhhhhhhhhhhhhhhhhh", req);
   let result = await Product.find({
     $or: [
       {
@@ -87,6 +88,7 @@ app.get("/search/:key", async (req, resp) => {
       },
     ],
   });
+  //console.log("thisissearchhhhhhhhhhhhhhhhhh  ", result);
   resp.send(result);
 });
 
@@ -156,7 +158,7 @@ app.get("/products", async (req, resp) => {
   try {
     const page = parseInt(req.query.page) || "0";
     console.log("this is page === ", page);
-    const pageSize = 3;
+    const pageSize = 4;
     const total = await Product.countDocuments({});
     // const { l } = req.query;
     // console.log(page);
