@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
 require("../db/config");
-
-const Razorpay = require("razorpay");
-
-const Order = require("../db/order");
 const log = require("../controller/login");
 const signup = require("../controller/signup");
 const addToCart = require("../controller/addToCart");
@@ -25,57 +21,7 @@ router.post("/create-order", checkout.createOrder);
 router.get("/get-razorpay-key", checkout.getrazorpaykey);
 router.post("/pay-order", checkout.payOrder);
 
-router.post("/create-order", async (req, res) => {
-  console.log("this is requestfororder  ", req.body);
-  try {
-    var instance = new Razorpay({
-      key_id: process.env.Razorpay_Key,
-      key_secret: process.env.Razorpay_secret,
-    });
-
-    let options = {
-      amount: req.body.amount, // amount in the smallest currency unit
-      currency: "INR",
-    };
-    const order = await instance.orders.create(options, function (err, order) {
-      console.log("orders === ", order);
-      if (order == null) {
-        console.log("underidconditoion", order);
-        return res.status(500).send("some error occured");
-      }
-      res.send(order);
-    });
-  } catch (error) {
-    console.log(error, "error aa gaya");
-  }
-});
-
-router.get("/get-razorpay-key", (req, res) => {
-  res.send({ key: "rzp_test_AHarLPM8Zl6Anf" });
-});
-
-router.post("/pay-order", async (req, res) => {
-  try {
-    const { amount, razorpayPaymentId, razorpayOrderId, razorpaySignature } =
-      req.body;
-    const newOrder = Order({
-      isPaid: true,
-      amount: amount,
-      razorpay: {
-        orderId: razorpayOrderId,
-        paymentId: razorpayPaymentId,
-        signature: razorpaySignature,
-      },
-    });
-    await newOrder.save();
-    res.send({
-      msg: "Payment was successfull",
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
-  }
-});
+module.exports = router;
 
 // router.get("/search/:key", async (req, resp) => {
 //   // console.log("thisissearchhhhhhhhhhhhhhhhhh", req);
@@ -183,5 +129,3 @@ router.post("/pay-order", async (req, res) => {
 //   //cartProduct = req.body._id;
 //   //console.log("cartProduct === >  ", cartProduct);
 // });
-
-module.exports = router;
