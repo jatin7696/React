@@ -82,7 +82,7 @@ module.exports = {
     resp.send(result);
   },
 
-  contact : async (req, res) => {
+  contact: async (req, res) => {
     console.log("this is contact us API ==== ", req.body);
     let contact = await Contact(req.body);
     let result = await contact.save();

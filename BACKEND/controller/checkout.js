@@ -33,7 +33,7 @@ module.exports = {
   },
 
   getrazorpaykey: (req, res) => {
-    res.send({ key: proccess.env.Razorpay_Key });
+    res.send({ key: process.env.Razorpay_Key });
   },
 
   payOrder: async (req, res) => {
