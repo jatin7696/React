@@ -1,8 +1,8 @@
 const Razorpay = require("razorpay");
 require("../db/config");
 const Order = require("../db/order");
-module.exports = {
 
+module.exports = {
   createOrder: async (req, res) => {
     console.log("this is requestfororder  ", req.body);
     try {
@@ -11,7 +11,7 @@ module.exports = {
 
         key_secret: process.env.Razorpay_secret,
       });
-      console.log("key ", process.env.Razorpay_Key);
+      //   console.log("key ", process.env.Razorpay_Key);
       let options = {
         amount: req.body.amount, // amount in the smallest currency unit
         currency: "INR",
@@ -28,13 +28,12 @@ module.exports = {
         }
       );
     } catch (error) {
-      console.log(error, "error aa gaya");
+      console.log(error, "error ");
     }
   },
 
-  
   getrazorpaykey: (req, res) => {
-    res.send({ key: "rzp_test_AHarLPM8Zl6Anf" });
+    res.send({ key: proccess.env.Razorpay_Key });
   },
 
   payOrder: async (req, res) => {
